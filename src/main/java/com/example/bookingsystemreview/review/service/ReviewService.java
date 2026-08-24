@@ -20,7 +20,7 @@ public class ReviewService {
     }
 
     public List<Review> getAllReviews() {
-        return reviewRepository.getAllReviews();
+        return reviewRepository.findAll();
     }
 
     public ReviewResponseDto createNewReview(NewReviewDto dto) {
