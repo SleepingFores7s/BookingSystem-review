@@ -29,6 +29,10 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
+    @GetMapping("/test")
+    public String testMessage() {
+        return "test";
+    }
 
     @GetMapping("/review")
     public ResponseEntity<?> getAllReviews() {
@@ -79,8 +83,8 @@ public class ReviewController {
     @DeleteMapping("/review/{id}")
     public ResponseEntity<?> deleteReviewById(@PathVariable Long id) {
         try{
-            reviewService.deleteReviewById(id);
-            return ResponseEntity.ok().build();
+            boolean deleted = reviewService.deleteReviewById(id);
+            return ResponseEntity.ok().body(deleted);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
