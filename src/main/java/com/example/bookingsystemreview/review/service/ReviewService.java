@@ -6,7 +6,6 @@ import com.example.bookingsystemreview.review.dto.UpdateReviewDto;
 import com.example.bookingsystemreview.review.entity.Review;
 import com.example.bookingsystemreview.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -40,11 +39,12 @@ public class ReviewService {
                     review.getUpdateDate()
             );
         }catch (Exception e){
-            return null;
+            return null; //todo Change catch to return a custom exception
         }
     }
 
     public ReviewResponseDto getReviewById(Long id) {
+        //todo Change to return custom exceptions
         try{
 
             Review review = reviewRepository.getReviewById(id);
@@ -66,7 +66,8 @@ public class ReviewService {
         }
     }
 
-    public ReviewResponseDto updateReviewById(Long id, @RequestBody UpdateReviewDto dto) {
+    public ReviewResponseDto updateReviewById(Long id, UpdateReviewDto dto) {
+        //todo Change to return custom exceptions
         try {
             Review review = reviewRepository.getReviewById(id);
             if (review == null) {
@@ -91,6 +92,7 @@ public class ReviewService {
     }
 
     public boolean deleteReviewById(Long id) {
+        //todo Change to return custom exceptions
         try{
 
             reviewRepository.deleteById(id);
