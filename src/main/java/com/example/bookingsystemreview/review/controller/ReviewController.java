@@ -15,11 +15,11 @@ import java.util.List;
 public class ReviewController {
 
     /*TODO C.R.U.D
-    * 1.  OK   Get all reviews (admin)
-    * 2. Get all reviews from 1 user (admin/user)
-    * 3. Write a review to DB (user)
-    * 4. Change a users review (user) (indicate that its been changed both in DB and to user)
-    * 5. Remove a users review (admin (any)/user (their own)))
+    * 1. OK Get all reviews (admin)
+    * 2. OK Get all reviews from 1 user (admin/user)
+    * 3. OK Write a review to DB (user)
+    * 4. OK Change a users review (user) (indicate that its been changed both in DB and to user)
+    * 5. OK Remove a users review (admin (any)/user (their own)))
     *
     * */
 
@@ -29,6 +29,10 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
+    @GetMapping("/test")
+    public String testMessage() {
+        return "test";
+    }
 
     @GetMapping("/review")
     public ResponseEntity<?> getAllReviews() {
@@ -67,13 +71,23 @@ public class ReviewController {
     }
 
     @PutMapping("/review/{id}")
-    public ResponseEntity<?> updateReviewById(@PathVariable int id, @RequestBody UpdateReviewDto updateReview) {
+    public ResponseEntity<?> updateReviewById(@PathVariable Long id, @RequestBody UpdateReviewDto updateReview) {
 
+        try {
+            return ResponseEntity.ok(reviewService.updateReviewById(id, updateReview));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @DeleteMapping("/review/{id}")
-    public ResponseEntity<?> deleteReviewById(@PathVariable int id) {
-
+    public ResponseEntity<?> deleteReviewById(@PathVariable Long id) {
+        try{
+            boolean deleted = reviewService.deleteReviewById(id);
+            return ResponseEntity.ok().body(deleted);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
 }
