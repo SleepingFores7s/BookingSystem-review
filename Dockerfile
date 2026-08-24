@@ -1,7 +1,6 @@
-FROM eclipse-temurin:25-jre
-LABEL   authors="SleepingFores7s"
-        project="BookingSystem-Review"
-        version="1.0.0"
+FROM eclipse-temurin:21-jre
+
+LABEL version="1.0.0"
 
 WORKDIR /booking-review
 
