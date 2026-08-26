@@ -1,11 +1,19 @@
-FROM eclipse-temurin:21-jre
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
 
-LABEL version="1.0.0"
+WORKDIR /app
+
+COPY pom.xml .
+
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jdk
 
 WORKDIR /booking-review
 
-COPY target/*.jar booking-review.jar
+COPY --from=builder /app/target/*.jar /booking-review/app.jar
 
 EXPOSE 8085
 
-ENTRYPOINT ["java", "-jar", "booking-review.jar"]
+CMD ["java", "-jar", "app.jar"]
