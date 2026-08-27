@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: #Resource Name
+  name: review-service
+spec:
+  replicas: 1 #How many Copies that exists
+  selector:
+    matchLabels:
+      app: review-service
+  template: #How the POD should look/be setup
+    metadata:
+      labels:
+        app: review-service
+    spec:
+      containers:
+        - name: review-service #Container name
+          image: bookingsystem-review-booking-review:latest #what Program image to use
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8085
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://review-db:3306/booking_review"
+            - name: MYSQL_USER
+              value: "review_user"
+            - name: MYSQL_PASSWORD
+              value: "review_password"
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-service
+spec:
+  type: LoadBalancer #Makes the program reachable from outside kubernetes (Port Forwarded ISH)
+  selector:
+    app: review-service
+  ports:
+    - port: 8085
+      targetPort: 8085
