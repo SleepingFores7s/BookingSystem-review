@@ -5,8 +5,12 @@ import com.example.bookingsystemreview.review.dto.ReviewResponseDto;
 import com.example.bookingsystemreview.review.dto.UpdateReviewDto;
 import com.example.bookingsystemreview.review.entity.Review;
 import com.example.bookingsystemreview.review.service.ReviewService;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +38,7 @@ public class ReviewController {
         return "test";
     }
 
-    @GetMapping("/review")
+    @GetMapping("/reviews")
     public ResponseEntity<?> getAllReviews() {
 
         List<Review> reviews = reviewService.getAllReviews();
@@ -46,7 +50,19 @@ public class ReviewController {
 
     }
 
-    @PostMapping("/review")
+    @GetMapping("/reviews/user")
+    public ResponseEntity<?> getReviewsByUser(@AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
+
+        List<ReviewResponseDto> reviews = reviewService.getReviewsByUserId(userId);
+        if(reviews.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+            return ResponseEntity.ok(reviews);
+    }
+
+    @PostMapping("/reviews")
     public ResponseEntity<?> createReview(@RequestBody NewReviewDto newReview) {
 
         ReviewResponseDto dto = reviewService.createNewReview(newReview);
@@ -57,7 +73,7 @@ public class ReviewController {
 
     }
 
-    @GetMapping("/review/{id}")
+    @GetMapping("/reviews/{id}")
     public ResponseEntity<?> getReviewById(@PathVariable Long id) {
 
         try{
@@ -70,7 +86,7 @@ public class ReviewController {
 
     }
 
-    @PutMapping("/review/{id}")
+    @PutMapping("/reviews/{id}")
     public ResponseEntity<?> updateReviewById(@PathVariable Long id, @RequestBody UpdateReviewDto updateReview) {
 
         try {
@@ -80,7 +96,7 @@ public class ReviewController {
         }
     }
 
-    @DeleteMapping("/review/{id}")
+    @DeleteMapping("/reviews/{id}")
     public ResponseEntity<?> deleteReviewById(@PathVariable Long id) {
         try{
             boolean deleted = reviewService.deleteReviewById(id);
