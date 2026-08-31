@@ -3,6 +3,7 @@ package com.example.bookingsystemreview.review.dto;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record NewReviewDto(
         @NotNull
@@ -10,6 +11,7 @@ public record NewReviewDto(
         @NotNull
         Long roomId,
         @NotNull
+        @Size(max=200)
         String reviewContent,
         @NotNull
         @Min(1)
