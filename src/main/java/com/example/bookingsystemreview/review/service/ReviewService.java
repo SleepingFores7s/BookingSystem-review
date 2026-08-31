@@ -1,12 +1,12 @@
 package com.example.bookingsystemreview.review.service;
 
+import com.example.bookingsystemreview.exceptionhandler.customexceptions.ResourceNotFoundException;
 import com.example.bookingsystemreview.review.dto.NewReviewDto;
 import com.example.bookingsystemreview.review.dto.ReviewResponseDto;
 import com.example.bookingsystemreview.review.dto.UpdateReviewDto;
 import com.example.bookingsystemreview.review.entity.Review;
 import com.example.bookingsystemreview.review.repository.ReviewRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.example.bookingsystemreview.security.sanitation.HtmlSanitizerUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,110 +15,93 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final HtmlSanitizerUtil sanitizer;
 
-    public ReviewService(ReviewRepository reviewRepository) {
+    public ReviewService(ReviewRepository reviewRepository, HtmlSanitizerUtil sanitizer) {
         this.reviewRepository = reviewRepository;
+        this.sanitizer = sanitizer;
     }
 
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
+    public List<ReviewResponseDto> getAllReviews() {
+        return reviewRepository.findAll().stream()
+                .map(review -> new ReviewResponseDto(
+                        review.getId(),
+                        review.getReviewContent(),
+                        review.getReviewScore(),
+                        review.getCreationDate(),
+                        review.getUpdateDate()
+                ))
+                .toList();
+    }
+
+    public List<ReviewResponseDto> getReviewsByUserId(Long userId) {
+        List<ReviewResponseDto> reviews = reviewRepository.findAllByUserId(userId);
+
+        if (reviews.isEmpty()) {
+            throw new ResourceNotFoundException("No reviews found for user ID: " + userId);
+        }
+
+        return reviews;
     }
 
     public ReviewResponseDto createNewReview(NewReviewDto dto) {
 
-        try {
-            Review review = reviewRepository.save(new Review(
-                    dto.userId(),
-                    dto.roomId(),
-                    dto.reviewContent(),
-                    dto.reviewScore()));
+        String cleanContent = sanitizer.sanitize(dto.reviewContent());
 
-            return new ReviewResponseDto(
-                    review.getId(),
-                    review.getReviewContent(),
-                    review.getReviewScore(),
-                    review.getCreationDate(),
-                    review.getUpdateDate()
-            );
-        }catch (Exception e){
-            return null; //todo Change catch to return a custom exception
-        }
+        Review review = reviewRepository.save(new Review(
+                dto.userId(),
+                dto.roomId(),
+                cleanContent,
+                dto.reviewScore())
+        );
+
+        return new ReviewResponseDto(
+                review.getId(),
+                review.getReviewContent(),
+                review.getReviewScore(),
+                review.getCreationDate(),
+                review.getUpdateDate()
+        );
     }
 
     public ReviewResponseDto getReviewById(Long id) {
-        //todo Change to return custom exceptions
-        try{
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + id));
 
-            Review review = reviewRepository.getReviewById(id);
-
-            if (review == null) {
-                return null;
-            }
-
-            return new ReviewResponseDto(
-                    review.getId(),
-                    review.getReviewContent(),
-                    review.getReviewScore(),
-                    review.getCreationDate(),
-                    review.getUpdateDate()
-            );
-
-        }catch (Exception e){
-            return null;
-        }
-    }
-
-    public List<ReviewResponseDto> getReviewsByUserId(Long userId) {
-
-        try{
-            List<ReviewResponseDto> returnedUserReviews = reviewRepository.getReviewByUserId(userId);
-            if (returnedUserReviews == null) {
-                return null;
-            }
-            return returnedUserReviews;
-
-        }catch (Exception e){
-            return null;
-        }
+        return new ReviewResponseDto(
+                review.getId(),
+                review.getReviewContent(),
+                review.getReviewScore(),
+                review.getCreationDate(),
+                review.getUpdateDate()
+        );
     }
 
     public ReviewResponseDto updateReviewById(Long id, UpdateReviewDto dto) {
-        //todo Change to return custom exceptions
-        try {
-            Review review = reviewRepository.getReviewById(id);
-            if (review == null) {
-                return null;
-            }
-            review.setReviewContent(dto.reviewContent());
-            review.setReviewScore(dto.reviewScore());
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + id));
 
-            reviewRepository.save(review);
+        String cleanContent = sanitizer.sanitize(dto.reviewContent());
 
-            return new ReviewResponseDto(
-                    review.getId(),
-                    review.getReviewContent(),
-                    review.getReviewScore(),
-                    review.getCreationDate(),
-                    review.getUpdateDate()
-            );
+        review.setReviewContent(cleanContent);
+        review.setReviewScore(dto.reviewScore());
+        Review savedReview = reviewRepository.save(review);
 
-        }catch (Exception e){
-            return null;
-        }
+        return new ReviewResponseDto(
+                savedReview.getId(),
+                savedReview.getReviewContent(),
+                savedReview.getReviewScore(),
+                savedReview.getCreationDate(),
+                savedReview.getUpdateDate()
+        );
     }
 
-    public boolean deleteReviewById(Long id) {
-        //todo Change to return custom exceptions
-        try{
-
-            reviewRepository.deleteById(id);
-            return true;
-
-        }catch (Exception e){
-            return false;
+    public void deleteReviewById(Long id) {
+        if (!reviewRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Object not found with id: " + id);
         }
+        reviewRepository.deleteById(id);
     }
-
 
 
 }
