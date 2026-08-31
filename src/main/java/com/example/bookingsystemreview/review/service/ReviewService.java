@@ -5,6 +5,8 @@ import com.example.bookingsystemreview.review.dto.ReviewResponseDto;
 import com.example.bookingsystemreview.review.dto.UpdateReviewDto;
 import com.example.bookingsystemreview.review.entity.Review;
 import com.example.bookingsystemreview.review.repository.ReviewRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,6 +62,20 @@ public class ReviewService {
                     review.getCreationDate(),
                     review.getUpdateDate()
             );
+
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    public List<ReviewResponseDto> getReviewsByUserId(Long userId) {
+
+        try{
+            List<ReviewResponseDto> returnedUserReviews = reviewRepository.getReviewByUserId(userId);
+            if (returnedUserReviews == null) {
+                return null;
+            }
+            return returnedUserReviews;
 
         }catch (Exception e){
             return null;

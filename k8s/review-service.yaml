@@ -14,11 +14,16 @@ spec:
     spec:
       containers:
         - name: review-service #Container name
-          image: bookingsystem-review-booking-review:latest #what Program image to use
+          image: booking-review:latest #what Program image to use
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8085
           env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: jwt-secret
+                  name: jwt-secret
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:mysql://review-db:3306/booking_review"
             - name: MYSQL_USER
