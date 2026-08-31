@@ -90,6 +90,14 @@
         </dependency>
         <!-- JWT Validation END -->
 
+        <!-- OWASP Sanitation -->
+        <dependency>
+            <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+            <artifactId>owasp-java-html-sanitizer</artifactId>
+            <version>20260101.1</version>
+        </dependency>
+        <!-- OWASP Sanitation END-->
+
     </dependencies>
 
     <build>
