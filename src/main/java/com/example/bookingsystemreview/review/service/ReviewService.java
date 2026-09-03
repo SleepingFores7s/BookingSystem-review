@@ -20,7 +20,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final HtmlSanitizerUtil sanitizer;
 
-    public ReviewService(ReviewRepository reviewRepository, HtmlSanitizerUtil sanitizer, RepositoryMethodInvocationListener repositoryMethodInvocationListener) {
+    public ReviewService(ReviewRepository reviewRepository, HtmlSanitizerUtil sanitizer) {
         this.reviewRepository = reviewRepository;
         this.sanitizer = sanitizer;
     }
