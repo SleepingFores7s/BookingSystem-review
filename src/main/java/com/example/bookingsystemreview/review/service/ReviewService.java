@@ -1,5 +1,6 @@
 package com.example.bookingsystemreview.review.service;
 
+import com.example.bookingsystemreview.exceptionhandler.customexceptions.MismatchedUserIdException;
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.ResourceNotFoundException;
 import com.example.bookingsystemreview.review.dto.NewReviewDto;
 import com.example.bookingsystemreview.review.dto.ReviewResponseDto;
@@ -7,9 +8,11 @@ import com.example.bookingsystemreview.review.dto.UpdateReviewDto;
 import com.example.bookingsystemreview.review.entity.Review;
 import com.example.bookingsystemreview.review.repository.ReviewRepository;
 import com.example.bookingsystemreview.security.sanitation.HtmlSanitizerUtil;
+import org.springframework.data.repository.core.support.RepositoryMethodInvocationListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ReviewService {
@@ -17,7 +20,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final HtmlSanitizerUtil sanitizer;
 
-    public ReviewService(ReviewRepository reviewRepository, HtmlSanitizerUtil sanitizer) {
+    public ReviewService(ReviewRepository reviewRepository, HtmlSanitizerUtil sanitizer, RepositoryMethodInvocationListener repositoryMethodInvocationListener) {
         this.reviewRepository = reviewRepository;
         this.sanitizer = sanitizer;
     }
@@ -44,12 +47,12 @@ public class ReviewService {
         return reviews;
     }
 
-    public ReviewResponseDto createNewReview(NewReviewDto dto) {
+    public ReviewResponseDto createNewReview(Long userId, NewReviewDto dto) {
 
         String cleanContent = sanitizer.sanitize(dto.reviewContent());
 
         Review review = reviewRepository.save(new Review(
-                dto.userId(),
+                userId,
                 dto.roomId(),
                 cleanContent,
                 dto.reviewScore())
@@ -77,9 +80,13 @@ public class ReviewService {
         );
     }
 
-    public ReviewResponseDto updateReviewById(Long id, UpdateReviewDto dto) {
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + id));
+    public ReviewResponseDto updateReviewById(Long userId, UpdateReviewDto dto) {
+        Review review = reviewRepository.findById(dto.reviewId())
+                .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + dto.reviewId()));
+
+        if (!Objects.equals(review.getUserId(), userId)) {
+            throw new MismatchedUserIdException("id: " +dto.reviewId()+ " did not match review id.");
+        }
 
         String cleanContent = sanitizer.sanitize(dto.reviewContent());
 
@@ -96,11 +103,17 @@ public class ReviewService {
         );
     }
 
-    public void deleteReviewById(Long id) {
-        if (!reviewRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Object not found with id: " + id);
+    public void deleteReviewById(Long userId, Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Review not found with id: " + reviewId)
+                );
+
+        if(!review.getUserId().equals(userId)) {
+            throw new MismatchedUserIdException("You dont have permission to delete this review");
         }
-        reviewRepository.deleteById(id);
+
+        reviewRepository.deleteById(reviewId);
     }
 
 
