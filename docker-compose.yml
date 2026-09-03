@@ -4,11 +4,12 @@ services:
     build: .
     container_name: booking-system-review
     ports:
-      - "8085:8085"
+      - "8083:8083"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://review-db:3306/booking_review
-      SPRING_DATASOURCE_USERNAME: review_user
-      SPRING_DATASOURCE_PASSWORD: review_password
+      JWT_SECRET: ${JWT_SECRET_KEY}
+      SPRING_DATASOURCE_URL: ${MYSQL_URL}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
     depends_on:
       review-db:
         condition: service_healthy
@@ -17,10 +18,10 @@ services:
     image: mysql:8
     container_name: booking-system-review-db
     environment:
-      MYSQL_DATABASE: booking_review
-      MYSQL_USER: review_user
-      MYSQL_PASSWORD: review_password
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - review-db-data:/var/lib/mysql
     healthcheck:
