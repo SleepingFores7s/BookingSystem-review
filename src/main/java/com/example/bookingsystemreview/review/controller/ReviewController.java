@@ -7,6 +7,7 @@ import com.example.bookingsystemreview.review.service.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,34 +41,34 @@ public class ReviewController {
     }
 
     //GET USER REVIEWS
-    @GetMapping("/reviews/user/{userId}")
-    public ResponseEntity<List<ReviewResponseDto>> getReviewsByUserId(@PathVariable Long userId) {
+    @GetMapping("/reviews/user")
+    public ResponseEntity<List<ReviewResponseDto>> getReviewsByUserId(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
     }
 
     //CREATE REVIEW
     @PostMapping("/reviews")
-    public ResponseEntity<ReviewResponseDto> createNewReview(@Valid @RequestBody NewReviewDto newReview) {
-            ReviewResponseDto created = reviewService.createNewReview(newReview);
+    public ResponseEntity<ReviewResponseDto> createNewReview(@AuthenticationPrincipal Long userId, @Valid @RequestBody NewReviewDto newReview) {
+            ReviewResponseDto created = reviewService.createNewReview(userId, newReview);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    //GET REVIEW USING ID
-    @GetMapping("/reviews/{id}")
-    public ResponseEntity<ReviewResponseDto> getReviewById(@PathVariable Long id) {
-            return ResponseEntity.ok(reviewService.getReviewById(id));
+    //GET REVIEW USING REVIEW-ID
+    @GetMapping("/reviews/{reviewId}")
+    public ResponseEntity<ReviewResponseDto> getReviewById(@PathVariable Long reviewId) {
+            return ResponseEntity.ok(reviewService.getReviewById(reviewId));
     }
 
     //UPDATE REVIEW
-    @PutMapping("/reviews/{id}")
-    public ResponseEntity<ReviewResponseDto> updateReviewById(@PathVariable Long id, @Valid @RequestBody UpdateReviewDto updateReview) {
-            return ResponseEntity.ok(reviewService.updateReviewById(id, updateReview));
+    @PutMapping("/reviews")
+    public ResponseEntity<ReviewResponseDto> updateReviewById(@AuthenticationPrincipal Long userId, @Valid @RequestBody UpdateReviewDto updateReview) {
+            return ResponseEntity.ok(reviewService.updateReviewById(userId, updateReview));
     }
 
-    //DELETE REVIEW
-    @DeleteMapping("/reviews/{id}")
-    public ResponseEntity<Void> deleteReviewById(@PathVariable Long id) {
-            reviewService.deleteReviewById(id);
+    //DELETE REVIEW //todo - use jwt id, remove path variable, check so user is the actual owner
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<Void> deleteReviewById(@AuthenticationPrincipal Long userId, @PathVariable Long reviewId) {
+            reviewService.deleteReviewById(userId, reviewId);
             return ResponseEntity.noContent().build();
     }
 
