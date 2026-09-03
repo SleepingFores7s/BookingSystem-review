@@ -7,8 +7,6 @@ import jakarta.validation.constraints.Size;
 
 public record NewReviewDto(
         @NotNull
-        Long userId,
-        @NotNull
         Long roomId,
         @NotNull
         @Size(max=200)
