@@ -16,14 +16,26 @@ spec:
         - name: mysql #Container name
           image: mysql:8 #what MySQL image to use
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: review_password
             - name: MYSQL_DATABASE
-              value: booking_review
+              valueFrom:
+                secretKeyRef:
+                  name: kubernetes-secrets
+                  key: review-db-name
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kubernetes-secrets
+                  key: review-db-root-password
             - name: MYSQL_USER
-              value: review_user
+              valueFrom:
+                secretKeyRef:
+                  name: kubernetes-secrets
+                  key: review-db-username
             - name: MYSQL_PASSWORD
-              value: review_password
+              valueFrom:
+                secretKeyRef:
+                  name: kubernetes-secrets
+                  key: review-db-password
           ports:
             - containerPort: 3306
 

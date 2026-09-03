@@ -65,7 +65,7 @@ public class ReviewController {
             return ResponseEntity.ok(reviewService.updateReviewById(userId, updateReview));
     }
 
-    //DELETE REVIEW //todo - use jwt id, remove path variable, check so user is the actual owner
+    //DELETE REVIEW
     @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<Void> deleteReviewById(@AuthenticationPrincipal Long userId, @PathVariable Long reviewId) {
             reviewService.deleteReviewById(userId, reviewId);
