@@ -14,18 +14,20 @@ public class JwtService {
     @Value("${JWT_SECRET}")
     private String SECRET_KEY; //TODO Replace with permanent key, Make permanent Key with classmates.
 
-    public String extractUsername(String token) {
-        return Jwts.parser()
+    public Long extractUserId(String token) {
+        String subject = Jwts.parser()
                 .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+
+        return Long.valueOf(subject);
     }
 
     public Boolean isTokenValid(String token) {
         try {
-            extractUsername(token);
+            extractUserId(token);
             System.err.println("JWT Token valid: ");
             return true;
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
