@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record UpdateReviewDto(
         @NotNull
+        Long reviewId,
+        @NotNull
         String reviewContent,
         @NotNull
         @Min(1)
