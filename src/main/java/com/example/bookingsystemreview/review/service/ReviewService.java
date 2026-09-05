@@ -37,6 +37,10 @@ public class ReviewService {
     }
 
     public List<ReviewResponseDto> getReviewsByUserId(Long userId) {
+        if(userId == null) {
+            throw new MissingValueException("userId is null");
+        }
+
         List<ReviewResponseDto> reviews = reviewRepository.findAllByUserId(userId);
 
         if (reviews.isEmpty()) {

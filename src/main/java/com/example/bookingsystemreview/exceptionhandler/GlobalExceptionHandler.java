@@ -1,6 +1,7 @@
 package com.example.bookingsystemreview.exceptionhandler;
 
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.MismatchedUserIdException;
+import com.example.bookingsystemreview.exceptionhandler.customexceptions.MissingValueException;
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
+                .body(errors);
+    }
+
+    @ExceptionHandler(MissingValueException.class)
+    public ResponseEntity<Map<String, String>> handleMissingValue(MissingValueException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("No value found", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
     }
 }

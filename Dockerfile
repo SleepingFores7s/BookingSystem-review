@@ -14,6 +14,6 @@ WORKDIR /booking-review
 
 COPY --from=builder /app/target/*.jar /booking-review/app.jar
 
-EXPOSE 8085
+EXPOSE 8083
 
 CMD ["java", "-jar", "app.jar"]
