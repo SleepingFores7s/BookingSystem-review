@@ -28,7 +28,7 @@ public class ReviewController {
     }
 
     //GET ALL REVIEWS
-    @GetMapping("/reviews")
+    @GetMapping("/reviews") //TODO SECURE METHOD
     public ResponseEntity<List<ReviewResponseDto>> getAllReviews() {
 
         List<ReviewResponseDto> reviews = reviewService.getAllReviews();
@@ -41,33 +41,38 @@ public class ReviewController {
     }
 
     //GET USER REVIEWS
-    @GetMapping("/reviews/user")
+    @GetMapping("/reviews/user") //TODO SECURE METHOD
     public ResponseEntity<List<ReviewResponseDto>> getReviewsByUserId(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
     }
 
     //CREATE REVIEW
-    @PostMapping("/reviews")
+    @PostMapping("/reviews") //TODO SECURE METHOD
     public ResponseEntity<ReviewResponseDto> createNewReview(@AuthenticationPrincipal Long userId, @Valid @RequestBody NewReviewDto newReview) {
             ReviewResponseDto created = reviewService.createNewReview(userId, newReview);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     //GET REVIEW USING REVIEW-ID
-    @GetMapping("/reviews/{reviewId}")
-    public ResponseEntity<ReviewResponseDto> getReviewById(@PathVariable Long reviewId) {
+    @GetMapping("/reviews/{id}")
+    public ResponseEntity<ReviewResponseDto> getReviewById(@PathVariable("id") Long reviewId) {
             return ResponseEntity.ok(reviewService.getReviewById(reviewId));
     }
 
+    @GetMapping("/reviews/room/{id}")
+    public ResponseEntity<List<ReviewResponseDto>> getReviewsByRoomId(@PathVariable("id") Long roomId) {
+        return ResponseEntity.ok(reviewService.getReviewsByRoomId(roomId));
+    }
+
     //UPDATE REVIEW
-    @PutMapping("/reviews")
+    @PutMapping("/reviews") //TODO SECURE METHOD
     public ResponseEntity<ReviewResponseDto> updateReviewById(@AuthenticationPrincipal Long userId, @Valid @RequestBody UpdateReviewDto updateReview) {
             return ResponseEntity.ok(reviewService.updateReviewById(userId, updateReview));
     }
 
     //DELETE REVIEW
-    @DeleteMapping("/reviews/{reviewId}")
-    public ResponseEntity<?> deleteReviewById(@AuthenticationPrincipal Long userId, @PathVariable Long reviewId) {
+    @DeleteMapping("/reviews/{id}") //TODO SECURE METHOD
+    public ResponseEntity<?> deleteReviewById(@AuthenticationPrincipal Long userId, @PathVariable("id") Long reviewId) {
             return reviewService.deleteReviewById(userId, reviewId);
     }
 
