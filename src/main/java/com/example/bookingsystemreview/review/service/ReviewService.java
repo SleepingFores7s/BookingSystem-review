@@ -30,6 +30,8 @@ public class ReviewService {
         return reviewRepository.findAll().stream()
                 .map(review -> new ReviewResponseDto(
                         review.getId(),
+                        review.getUserId(),
+                        review.getRoomId(),
                         review.getReviewContent(),
                         review.getReviewScore(),
                         review.getCreationDate(),
@@ -43,13 +45,7 @@ public class ReviewService {
             throw new MissingValueException("userId is null");
         }
 
-        List<ReviewResponseDto> reviews = reviewRepository.findAllByUserId(userId);
-
-        if (reviews.isEmpty()) {
-            throw new ResourceNotFoundException("No reviews found for user ID: " + userId);
-        }
-
-        return reviews;
+        return reviewRepository.findAllByUserId(userId);
     }
 
     public ReviewResponseDto createNewReview(Long userId, NewReviewDto dto) {
@@ -65,6 +61,8 @@ public class ReviewService {
 
         return new ReviewResponseDto(
                 review.getId(),
+                review.getUserId(),
+                review.getRoomId(),
                 review.getReviewContent(),
                 review.getReviewScore(),
                 review.getCreationDate(),
@@ -78,6 +76,8 @@ public class ReviewService {
 
         return new ReviewResponseDto(
                 review.getId(),
+                review.getUserId(),
+                review.getRoomId(),
                 review.getReviewContent(),
                 review.getReviewScore(),
                 review.getCreationDate(),
@@ -100,11 +100,13 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         return new ReviewResponseDto(
-                savedReview.getId(),
-                savedReview.getReviewContent(),
-                savedReview.getReviewScore(),
-                savedReview.getCreationDate(),
-                savedReview.getUpdateDate()
+                review.getId(),
+                review.getUserId(),
+                review.getRoomId(),
+                review.getReviewContent(),
+                review.getReviewScore(),
+                review.getCreationDate(),
+                review.getUpdateDate()
         );
     }
 
@@ -131,5 +133,18 @@ public class ReviewService {
                 .body("Deleted review with id: " + reviewId);
     }
 
+    public List<ReviewResponseDto> getReviewsByRoomId(Long roomId) {
 
+        if(roomId == null) {
+            throw new MissingValueException("room id is null");
+        }
+
+        List<ReviewResponseDto> reviews = reviewRepository.findAllByRoomId(roomId);
+
+        if (reviews.isEmpty()) {
+            throw new ResourceNotFoundException("No reviews found for room ID: " + roomId);
+        }
+
+        return reviews;
+    }
 }
