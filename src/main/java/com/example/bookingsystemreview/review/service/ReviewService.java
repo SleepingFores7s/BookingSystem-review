@@ -9,10 +9,11 @@ import com.example.bookingsystemreview.review.dto.UpdateReviewDto;
 import com.example.bookingsystemreview.review.entity.Review;
 import com.example.bookingsystemreview.review.repository.ReviewRepository;
 import com.example.bookingsystemreview.security.sanitation.HtmlSanitizerUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ReviewService {
@@ -88,8 +89,8 @@ public class ReviewService {
         Review review = reviewRepository.findById(dto.reviewId())
                 .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + dto.reviewId()));
 
-        if (!Objects.equals(review.getUserId(), userId)) {
-            throw new MismatchedUserIdException("id: " +dto.reviewId()+ " did not match review id.");
+        if (!review.getUserId().equals(userId)) {
+            throw new MismatchedUserIdException("User does not have permission to update review with id: " + dto.reviewId());
         }
 
         String cleanContent = sanitizer.sanitize(dto.reviewContent());
@@ -107,17 +108,27 @@ public class ReviewService {
         );
     }
 
-    public void deleteReviewById(Long userId, Long reviewId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Review not found with id: " + reviewId)
-                );
+    public ResponseEntity<?> deleteReviewById(Long userId, Long reviewId) {
 
-        if(!review.getUserId().equals(userId)) {
-            throw new MismatchedUserIdException("You dont have permission to delete this review");
+        if(reviewId == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MissingValueException("reviewId is null"));
         }
 
-        reviewRepository.deleteById(reviewId);
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() ->  new ResourceNotFoundException("Object not found with id: " + reviewId));
+
+        if(!review.getUserId().equals(userId)) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("You don't have permission to delete this review");
+        }
+
+        reviewRepository.delete(review);
+        return ResponseEntity
+                .ok()
+                .body("Deleted review with id: " + reviewId);
     }
 
 

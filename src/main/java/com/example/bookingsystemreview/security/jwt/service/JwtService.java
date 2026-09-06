@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 public class JwtService {
 
     @Value("${JWT_SECRET}")
-    private String SECRET_KEY; //TODO Replace with permanent key, Make permanent Key with classmates.
+    private String SECRET_KEY;
 
     public Long extractUserId(String token) {
         String subject = Jwts.parser()

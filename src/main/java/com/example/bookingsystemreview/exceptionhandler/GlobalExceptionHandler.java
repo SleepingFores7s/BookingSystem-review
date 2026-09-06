@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingValueException.class)
     public ResponseEntity<Map<String, String>> handleMissingValue(MissingValueException exception) {
         Map<String, String> errors = new HashMap<>();
-        errors.put("No value found", exception.getMessage());
+        errors.put("message", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
