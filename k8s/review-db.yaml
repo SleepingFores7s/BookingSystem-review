@@ -25,17 +25,17 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: kubernetes-secrets
-                  key: review-db-root-password
+                  key: REVIEW_DB_ROOT_PASSWORD
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
                   name: kubernetes-secrets
-                  key: review-db-username
+                  key: REVIEW_DB_USERNAME
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: kubernetes-secrets
-                  key: review-db-password
+                  key: REVIEW_DB_PASSWORD
           ports:
             - containerPort: 3306
 
