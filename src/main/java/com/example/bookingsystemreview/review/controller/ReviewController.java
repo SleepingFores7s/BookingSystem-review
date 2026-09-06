@@ -70,6 +70,11 @@ public class ReviewController {
             return ResponseEntity.ok(reviewService.updateReviewById(userId, updateReview));
     }
 
+    @GetMapping("/reviews/room/avgRating/{id}")
+    public ResponseEntity<Double> getAverageRatingByRoomId(@PathVariable("id") Long roomId) {
+        return ResponseEntity.ok(reviewService.getAverageRatingByRoomId(roomId));
+    }
+
     //DELETE REVIEW
     @DeleteMapping("/reviews/{id}") //TODO SECURE METHOD
     public ResponseEntity<?> deleteReviewById(@AuthenticationPrincipal Long userId, @PathVariable("id") Long reviewId) {
