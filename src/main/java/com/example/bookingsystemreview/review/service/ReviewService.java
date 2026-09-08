@@ -148,7 +148,7 @@ public class ReviewService {
         return reviews;
     }
 
-    public Double getAverageRatingByRoomId(Long roomId) {
-        return reviewRepository.findAverageRatingByRoomId(roomId);
+    public Double getAverageRatingByRoomNumber(Long roomNumber) {
+        return reviewRepository.findAverageRatingByRoomId(roomNumber);
     }
 }
