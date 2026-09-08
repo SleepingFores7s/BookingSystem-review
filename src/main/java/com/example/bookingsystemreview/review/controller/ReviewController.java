@@ -71,8 +71,8 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/room/avgRating/{id}")
-    public ResponseEntity<Double> getAverageRatingByRoomId(@PathVariable("id") Long roomId) {
-        return ResponseEntity.ok(reviewService.getAverageRatingByRoomId(roomId));
+    public ResponseEntity<Double> getAverageRatingByRoomId(@PathVariable("id") Long roomNumber) {
+        return ResponseEntity.ok(reviewService.getAverageRatingByRoomNumber(roomNumber));
     }
 
     //DELETE REVIEW
