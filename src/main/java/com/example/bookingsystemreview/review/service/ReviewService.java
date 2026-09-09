@@ -50,7 +50,7 @@ public class ReviewService {
 
         Review review = reviewRepository.save(new Review(
                 userId,
-                dto.roomId(),
+                dto.roomNumber(),
                 cleanContent,
                 dto.reviewScore())
         );
