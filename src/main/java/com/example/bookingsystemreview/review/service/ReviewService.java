@@ -85,7 +85,8 @@ public class ReviewService {
         return reviewRepository.findAllByRoomNumber(roomNumber);
     }
 
-    public ReviewResponseDto updateReviewById(Long userId, UpdateReviewDto dto) {
+    public ReviewResponseDto updateReviewByReviewId(Long userId, UpdateReviewDto dto) {
+
         Review review = reviewRepository.findById(dto.reviewId())
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + dto.reviewId()));
 
