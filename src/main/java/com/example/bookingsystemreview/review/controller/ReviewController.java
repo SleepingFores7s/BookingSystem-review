@@ -67,7 +67,10 @@ public class ReviewController {
     //DELETE REVIEW
     @DeleteMapping("/reviews/{id}") //TODO SECURE METHOD
     public ResponseEntity<?> deleteReviewById(@AuthenticationPrincipal Long userId, @PathVariable("id") Long reviewId) {
-            return reviewService.deleteReviewById(userId, reviewId);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(reviewService.deleteReviewById(userId, reviewId));
     }
 
 }
