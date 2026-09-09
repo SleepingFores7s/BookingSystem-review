@@ -73,7 +73,7 @@ public class ReviewService {
         return new ReviewResponseDto(
                 review.getId(),
                 review.getUserId(),
-                review.getRoomId(),
+                review.getRoomNumber(),
                 review.getReviewContent(),
                 review.getReviewScore(),
                 review.getCreationDate(),
