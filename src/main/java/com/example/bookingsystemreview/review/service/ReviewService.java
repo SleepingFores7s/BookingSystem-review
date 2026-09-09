@@ -87,7 +87,7 @@ public class ReviewService {
 
     public ReviewResponseDto updateReviewById(Long userId, UpdateReviewDto dto) {
         Review review = reviewRepository.findById(dto.reviewId())
-                .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + dto.reviewId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + dto.reviewId()));
 
         if (!review.getUserId().equals(userId)) {
             throw new MismatchedUserIdException("User does not own review with id: " + dto.reviewId());
