@@ -45,9 +45,9 @@ public class ReviewController {
             return ResponseEntity.ok(reviewService.getReviewByReviewId(reviewId));
     }
 
-    @GetMapping("/reviews/room/{id}")
-    public ResponseEntity<List<ReviewResponseDto>> getReviewsByRoomId(@PathVariable("id") Long roomId) {
-        return ResponseEntity.ok(reviewService.getReviewsByRoomId(roomId));
+    @GetMapping("/reviews/room/{roomNumber}")
+    public ResponseEntity<List<ReviewResponseDto>> getReviewsByRoomNumber(@PathVariable("roomNumber") Integer roomNumber) {
+        return ResponseEntity.ok(reviewService.getReviewsByRoomNumber(roomNumber));
     }
 
     //UPDATE REVIEW
