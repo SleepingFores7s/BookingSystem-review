@@ -59,8 +59,8 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.updateReviewByReviewId(userId, updateReview));
     }
 
-    @GetMapping("/reviews/room/avgRating/{id}")
-    public ResponseEntity<Double> getAverageRatingByRoomId(@PathVariable("id") Long roomNumber) {
+    @GetMapping("/reviews/room/avgRating/{roomNumber}")
+    public ResponseEntity<Double> getAverageRatingByRoomId(@PathVariable("roomNumber") int roomNumber) {
         return ResponseEntity.ok(reviewService.getAverageRatingByRoomNumber(roomNumber));
     }
 
