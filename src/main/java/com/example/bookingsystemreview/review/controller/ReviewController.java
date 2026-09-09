@@ -36,8 +36,7 @@ public class ReviewController {
     //CREATE REVIEW
     @PostMapping("/reviews") //TODO SECURE METHOD
     public ResponseEntity<ReviewResponseDto> createNewReview(@AuthenticationPrincipal Long userId, @Valid @RequestBody NewReviewDto newReview) {
-            ReviewResponseDto created = reviewService.createNewReview(userId, newReview);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+            return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.createNewReview(userId, newReview));
     }
 
     //GET REVIEW USING REVIEW-ID
