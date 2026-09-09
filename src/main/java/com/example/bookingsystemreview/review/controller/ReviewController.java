@@ -34,7 +34,7 @@ public class ReviewController {
     }
 
     //GET USER REVIEWS
-    @GetMapping("/reviews/user") //TODO SECURE METHOD
+    @GetMapping("/reviews/user")
     public ResponseEntity<List<ReviewResponseDto>> getReviewsByUserId(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
     }
