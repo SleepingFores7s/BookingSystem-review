@@ -60,7 +60,7 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/room/avgRating/{roomNumber}")
-    public ResponseEntity<Double> getAverageRatingByRoomId(@PathVariable("roomNumber") int roomNumber) {
+    public ResponseEntity<Double> getAverageRatingByRoomNumber(@PathVariable("roomNumber") Integer roomNumber) {
         return ResponseEntity.ok(reviewService.getAverageRatingByRoomNumber(roomNumber));
     }
 
