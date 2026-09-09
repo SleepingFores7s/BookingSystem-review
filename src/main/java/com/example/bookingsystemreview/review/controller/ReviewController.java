@@ -28,7 +28,7 @@ public class ReviewController {
     }
 
     //GET ALL REVIEWS
-    @GetMapping("/reviews") //TODO SECURE METHOD
+    @GetMapping("/reviews")
     public ResponseEntity<List<ReviewResponseDto>> getAllReviews() {
         return ResponseEntity.ok(reviewService.getAllReviews());
     }
