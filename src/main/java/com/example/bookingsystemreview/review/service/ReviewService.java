@@ -31,7 +31,7 @@ public class ReviewService {
                 .map(review -> new ReviewResponseDto(
                         review.getId(),
                         review.getUserId(),
-                        review.getRoomId(),
+                        review.getRoomNumber(),
                         review.getReviewContent(),
                         review.getReviewScore(),
                         review.getCreationDate(),
