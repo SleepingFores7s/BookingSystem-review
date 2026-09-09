@@ -111,6 +111,10 @@ public class ReviewService {
         );
     }
 
+    public Double getAverageRatingByRoomNumber(Integer roomNumber) {
+        return reviewRepository.findAverageRatingByRoomNumber(roomNumber);
+    }
+
     public ResponseEntity<?> deleteReviewById(Long userId, Long reviewId) {
 
         if(reviewId == null) {
