@@ -68,7 +68,7 @@ public class ReviewService {
 
     public ReviewResponseDto getReviewByReviewId(Long id) {
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No review found with id: " + id));
 
         return new ReviewResponseDto(
                 review.getId(),
