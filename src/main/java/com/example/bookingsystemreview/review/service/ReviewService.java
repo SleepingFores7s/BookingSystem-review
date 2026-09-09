@@ -100,13 +100,13 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         return new ReviewResponseDto(
-                review.getId(),
-                review.getUserId(),
-                review.getRoomId(),
-                review.getReviewContent(),
-                review.getReviewScore(),
-                review.getCreationDate(),
-                review.getUpdateDate()
+                savedReview.getId(),
+                savedReview.getUserId(),
+                savedReview.getRoomNumber(),
+                savedReview.getReviewContent(),
+                savedReview.getReviewScore(),
+                savedReview.getCreationDate(),
+                savedReview.getUpdateDate()
         );
     }
 
