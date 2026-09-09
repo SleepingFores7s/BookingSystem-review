@@ -56,7 +56,7 @@ public class ReviewController {
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(reviewService.updateReviewById(userId, updateReview));
+        return ResponseEntity.ok(reviewService.updateReviewByReviewId(userId, updateReview));
     }
 
     @GetMapping("/reviews/room/avgRating/{id}")
