@@ -21,12 +21,6 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    //TEST
-    @GetMapping("/test")
-    public String testMessage() {
-        return "test";
-    }
-
     //GET ALL REVIEWS
     @GetMapping("/reviews")
     public ResponseEntity<List<ReviewResponseDto>> getAllReviews() {
