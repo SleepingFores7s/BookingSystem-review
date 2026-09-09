@@ -81,6 +81,10 @@ public class ReviewService {
         );
     }
 
+    public List<ReviewResponseDto> getReviewsByRoomNumber(Integer roomNumber) {
+        return reviewRepository.findAllByRoomNumber(roomNumber);
+    }
+
     public ReviewResponseDto updateReviewById(Long userId, UpdateReviewDto dto) {
         Review review = reviewRepository.findById(dto.reviewId())
                 .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + dto.reviewId()));
