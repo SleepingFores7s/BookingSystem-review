@@ -30,14 +30,7 @@ public class ReviewController {
     //GET ALL REVIEWS
     @GetMapping("/reviews") //TODO SECURE METHOD
     public ResponseEntity<List<ReviewResponseDto>> getAllReviews() {
-
-        List<ReviewResponseDto> reviews = reviewService.getAllReviews();
-
-        if(reviews.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.ok(reviews);
-
+        return ResponseEntity.ok(reviewService.getAllReviews());
     }
 
     //GET USER REVIEWS
