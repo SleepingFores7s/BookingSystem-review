@@ -21,64 +21,56 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    //TEST
-    @GetMapping("/test")
-    public String testMessage() {
-        return "test";
-    }
-
     //GET ALL REVIEWS
-    @GetMapping("/reviews") //TODO SECURE METHOD
+    @GetMapping("/reviews")
     public ResponseEntity<List<ReviewResponseDto>> getAllReviews() {
-
-        List<ReviewResponseDto> reviews = reviewService.getAllReviews();
-
-        if(reviews.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.ok(reviews);
-
+        return ResponseEntity.ok(reviewService.getAllReviews());
     }
 
     //GET USER REVIEWS
-    @GetMapping("/reviews/user") //TODO SECURE METHOD
+    @GetMapping("/reviews/user")
     public ResponseEntity<List<ReviewResponseDto>> getReviewsByUserId(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
     }
 
     //CREATE REVIEW
-    @PostMapping("/reviews") //TODO SECURE METHOD
+    @PostMapping("/reviews")
     public ResponseEntity<ReviewResponseDto> createNewReview(@AuthenticationPrincipal Long userId, @Valid @RequestBody NewReviewDto newReview) {
-            ReviewResponseDto created = reviewService.createNewReview(userId, newReview);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.createNewReview(userId, newReview));
     }
 
     //GET REVIEW USING REVIEW-ID
     @GetMapping("/reviews/{id}")
-    public ResponseEntity<ReviewResponseDto> getReviewById(@PathVariable("id") Long reviewId) {
-            return ResponseEntity.ok(reviewService.getReviewById(reviewId));
+    public ResponseEntity<ReviewResponseDto> getReviewByReviewId(@PathVariable("id") Long reviewId) {
+        return ResponseEntity.ok(reviewService.getReviewByReviewId(reviewId));
     }
 
-    @GetMapping("/reviews/room/{id}")
-    public ResponseEntity<List<ReviewResponseDto>> getReviewsByRoomId(@PathVariable("id") Long roomId) {
-        return ResponseEntity.ok(reviewService.getReviewsByRoomId(roomId));
+    @GetMapping("/reviews/room/{roomNumber}")
+    public ResponseEntity<List<ReviewResponseDto>> getReviewsByRoomNumber(@PathVariable("roomNumber") Integer roomNumber) {
+        return ResponseEntity.ok(reviewService.getReviewsByRoomNumber(roomNumber));
     }
 
     //UPDATE REVIEW
-    @PutMapping("/reviews") //TODO SECURE METHOD
-    public ResponseEntity<ReviewResponseDto> updateReviewById(@AuthenticationPrincipal Long userId, @Valid @RequestBody UpdateReviewDto updateReview) {
-            return ResponseEntity.ok(reviewService.updateReviewById(userId, updateReview));
+    @PutMapping("/reviews")
+    public ResponseEntity<ReviewResponseDto> updateReviewByReviewId(@AuthenticationPrincipal Long userId, @Valid @RequestBody UpdateReviewDto updateReview) {
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(reviewService.updateReviewByReviewId(userId, updateReview));
     }
 
-    @GetMapping("/reviews/room/avgRating/{id}")
-    public ResponseEntity<Double> getAverageRatingByRoomId(@PathVariable("id") Long roomNumber) {
+    @GetMapping("/reviews/room/avgRating/{roomNumber}")
+    public ResponseEntity<Double> getAverageRatingByRoomNumber(@PathVariable("roomNumber") Integer roomNumber) {
         return ResponseEntity.ok(reviewService.getAverageRatingByRoomNumber(roomNumber));
     }
 
     //DELETE REVIEW
-    @DeleteMapping("/reviews/{id}") //TODO SECURE METHOD
-    public ResponseEntity<?> deleteReviewById(@AuthenticationPrincipal Long userId, @PathVariable("id") Long reviewId) {
-            return reviewService.deleteReviewById(userId, reviewId);
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<?> deleteReviewById(@AuthenticationPrincipal Long userId, @PathVariable("reviewId") Long reviewId) {
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(reviewService.deleteReviewById(userId, reviewId));
     }
 
 }

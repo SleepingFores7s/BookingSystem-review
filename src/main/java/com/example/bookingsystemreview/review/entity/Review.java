@@ -17,7 +17,7 @@ public class Review {
     private Long userId;
 
     @Column(nullable = false)
-    private Long roomId;
+    private Integer roomNumber;
 
     @Column(nullable = false)
     private String reviewContent;
@@ -36,11 +36,11 @@ public class Review {
     public Review() {}
 
     public Review(Long userId,
-                  Long roomId,
+                  int roomNumber,
                   String reviewContent,
                   Integer reviewScore) {
         this.userId = userId;
-        this.roomId = roomId;
+        this.roomNumber = roomNumber;
         this.reviewContent = reviewContent;
         this.reviewScore = reviewScore;
     }
@@ -56,11 +56,11 @@ public class Review {
         this.userId = userId;
     }
 
-    public Long getRoomId() {
-        return roomId;
+    public int getRoomNumber() {
+        return roomNumber;
     }
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
+    public void setRoomNumber(Integer roomNumber) {
+        this.roomNumber = roomNumber;
     }
 
     public String getReviewContent() {

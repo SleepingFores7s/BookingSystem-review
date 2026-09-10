@@ -1,13 +1,15 @@
 package com.example.bookingsystemreview.exceptionhandler;
 
-import com.example.bookingsystemreview.exceptionhandler.customexceptions.MismatchedUserIdException;
+
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.MissingValueException;
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.ResourceNotFoundException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,20 +45,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException exception) {
         Map<String, String> errors = new HashMap<>();
-        errors.put("error", exception.getMessage());
-
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(errors);
-    }
-
-    @ExceptionHandler(MismatchedUserIdException.class)
-    public ResponseEntity<Map<String, String>> handleMismatchedUserId(MismatchedUserIdException exception) {
-        Map<String, String> errors = new HashMap<>();
         errors.put("message", exception.getMessage());
 
         return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
     }
 
@@ -66,6 +58,24 @@ public class GlobalExceptionHandler {
         errors.put("message", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(errors);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Map<String, String>> handleDatabaseError(DataAccessException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "An error occurred while accessing the database");
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errors);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(errors);
     }
 }

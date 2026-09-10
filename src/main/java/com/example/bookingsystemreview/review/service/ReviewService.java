@@ -1,7 +1,5 @@
 package com.example.bookingsystemreview.review.service;
 
-import com.example.bookingsystemreview.exceptionhandler.customexceptions.MismatchedUserIdException;
-import com.example.bookingsystemreview.exceptionhandler.customexceptions.MissingValueException;
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.ResourceNotFoundException;
 import com.example.bookingsystemreview.review.dto.NewReviewDto;
 import com.example.bookingsystemreview.review.dto.ReviewResponseDto;
@@ -9,7 +7,8 @@ import com.example.bookingsystemreview.review.dto.UpdateReviewDto;
 import com.example.bookingsystemreview.review.entity.Review;
 import com.example.bookingsystemreview.review.repository.ReviewRepository;
 import com.example.bookingsystemreview.security.sanitation.HtmlSanitizerUtil;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +30,7 @@ public class ReviewService {
                 .map(review -> new ReviewResponseDto(
                         review.getId(),
                         review.getUserId(),
-                        review.getRoomId(),
+                        review.getRoomNumber(),
                         review.getReviewContent(),
                         review.getReviewScore(),
                         review.getCreationDate(),
@@ -41,10 +40,6 @@ public class ReviewService {
     }
 
     public List<ReviewResponseDto> getReviewsByUserId(Long userId) {
-        if(userId == null) {
-            throw new MissingValueException("userId is null");
-        }
-
         return reviewRepository.findAllByUserId(userId);
     }
 
@@ -54,7 +49,7 @@ public class ReviewService {
 
         Review review = reviewRepository.save(new Review(
                 userId,
-                dto.roomId(),
+                dto.roomNumber(),
                 cleanContent,
                 dto.reviewScore())
         );
@@ -62,7 +57,7 @@ public class ReviewService {
         return new ReviewResponseDto(
                 review.getId(),
                 review.getUserId(),
-                review.getRoomId(),
+                review.getRoomNumber(),
                 review.getReviewContent(),
                 review.getReviewScore(),
                 review.getCreationDate(),
@@ -70,14 +65,14 @@ public class ReviewService {
         );
     }
 
-    public ReviewResponseDto getReviewById(Long id) {
+    public ReviewResponseDto getReviewByReviewId(Long id) {
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No review found with id: " + id));
 
         return new ReviewResponseDto(
                 review.getId(),
                 review.getUserId(),
-                review.getRoomId(),
+                review.getRoomNumber(),
                 review.getReviewContent(),
                 review.getReviewScore(),
                 review.getCreationDate(),
@@ -85,12 +80,17 @@ public class ReviewService {
         );
     }
 
-    public ReviewResponseDto updateReviewById(Long userId, UpdateReviewDto dto) {
+    public List<ReviewResponseDto> getReviewsByRoomNumber(Integer roomNumber) {
+        return reviewRepository.findAllByRoomNumber(roomNumber);
+    }
+
+    public ReviewResponseDto updateReviewByReviewId(Long userId, UpdateReviewDto dto) {
+
         Review review = reviewRepository.findById(dto.reviewId())
-                .orElseThrow(() -> new ResourceNotFoundException("Object not found with id: " + dto.reviewId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + dto.reviewId()));
 
         if (!review.getUserId().equals(userId)) {
-            throw new MismatchedUserIdException("User does not have permission to update review with id: " + dto.reviewId());
+            throw new AccessDeniedException("You don't have permission to update this review");
         }
 
         String cleanContent = sanitizer.sanitize(dto.reviewContent());
@@ -100,31 +100,27 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         return new ReviewResponseDto(
-                review.getId(),
-                review.getUserId(),
-                review.getRoomId(),
-                review.getReviewContent(),
-                review.getReviewScore(),
-                review.getCreationDate(),
-                review.getUpdateDate()
+                savedReview.getId(),
+                savedReview.getUserId(),
+                savedReview.getRoomNumber(),
+                savedReview.getReviewContent(),
+                savedReview.getReviewScore(),
+                savedReview.getCreationDate(),
+                savedReview.getUpdateDate()
         );
+    }
+
+    public Double getAverageRatingByRoomNumber(Integer roomNumber) {
+        return reviewRepository.findAverageRatingByRoomNumber(roomNumber);
     }
 
     public ResponseEntity<?> deleteReviewById(Long userId, Long reviewId) {
 
-        if(reviewId == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MissingValueException("reviewId is null"));
-        }
-
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() ->  new ResourceNotFoundException("Object not found with id: " + reviewId));
+                .orElseThrow(() ->  new ResourceNotFoundException("Review not found with id: " + reviewId));
 
         if(!review.getUserId().equals(userId)) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("You don't have permission to delete this review");
+            throw new AccessDeniedException("You don't have permission to delete this review");
         }
 
         reviewRepository.delete(review);
@@ -133,22 +129,4 @@ public class ReviewService {
                 .body("Deleted review with id: " + reviewId);
     }
 
-    public List<ReviewResponseDto> getReviewsByRoomId(Long roomId) {
-
-        if(roomId == null) {
-            throw new MissingValueException("room id is null");
-        }
-
-        List<ReviewResponseDto> reviews = reviewRepository.findAllByRoomId(roomId);
-
-        if (reviews.isEmpty()) {
-            throw new ResourceNotFoundException("No reviews found for room ID: " + roomId);
-        }
-
-        return reviews;
-    }
-
-    public Double getAverageRatingByRoomNumber(Long roomNumber) {
-        return reviewRepository.findAverageRatingByRoomId(roomNumber);
-    }
 }
