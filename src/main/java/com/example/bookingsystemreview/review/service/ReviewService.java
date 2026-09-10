@@ -129,22 +129,4 @@ public class ReviewService {
                 .body("Deleted review with id: " + reviewId);
     }
 
-    public List<ReviewResponseDto> getReviewsByRoomId(Long roomId) {
-
-        if(roomId == null) {
-            throw new MissingValueException("room id is null");
-        }
-
-        List<ReviewResponseDto> reviews = reviewRepository.findAllByRoomId(roomId);
-
-        if (reviews.isEmpty()) {
-            throw new ResourceNotFoundException("No reviews found for room ID: " + roomId);
-        }
-
-        return reviews;
-    }
-
-    public Double getAverageRatingByRoomNumber(Long roomNumber) {
-        return reviewRepository.findAverageRatingByRoomId(roomNumber);
-    }
 }
