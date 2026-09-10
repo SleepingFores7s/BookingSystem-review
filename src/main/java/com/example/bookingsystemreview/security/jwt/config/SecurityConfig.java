@@ -24,8 +24,10 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
-                        .requestMatchers("/test").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.POST, "/reviews").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/reviews").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/reviews/**").authenticated()
+                        .anyRequest().permitAll())
                 .sessionManagement(s -> s.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter,
