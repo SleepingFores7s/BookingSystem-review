@@ -50,16 +50,6 @@ public class GlobalExceptionHandler {
                 .body(errors);
     }
 
-    @ExceptionHandler(MismatchedUserIdException.class)
-    public ResponseEntity<Map<String, String>> handleMismatchedUserId(MismatchedUserIdException exception) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("message", exception.getMessage());
-
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(errors);
-    }
-
     @ExceptionHandler(MissingValueException.class)
     public ResponseEntity<Map<String, String>> handleMissingValue(MissingValueException exception) {
         Map<String, String> errors = new HashMap<>();
