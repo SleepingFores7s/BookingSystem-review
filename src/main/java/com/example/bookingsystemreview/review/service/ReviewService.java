@@ -117,12 +117,6 @@ public class ReviewService {
 
     public ResponseEntity<?> deleteReviewById(Long userId, Long reviewId) {
 
-        if(reviewId == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MissingValueException("reviewId is null"));
-        }
-
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() ->  new ResourceNotFoundException("Object not found with id: " + reviewId));
 
