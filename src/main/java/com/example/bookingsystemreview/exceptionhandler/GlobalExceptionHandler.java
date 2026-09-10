@@ -1,6 +1,6 @@
 package com.example.bookingsystemreview.exceptionhandler;
 
-import com.example.bookingsystemreview.exceptionhandler.customexceptions.MismatchedUserIdException;
+
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.MissingValueException;
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
