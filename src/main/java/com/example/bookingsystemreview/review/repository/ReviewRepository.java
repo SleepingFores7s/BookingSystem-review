@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<ReviewResponseDto> findAllByUserId(Long userId);
-    List<ReviewResponseDto> findAllByRoomId(Long roomId);
+    List<ReviewResponseDto> findAllByRoomNumber(Integer roomNumber);
 
-    @Query("SELECT AVG(r.reviewScore) FROM Review r WHERE r.roomId = :roomId")
-    Double findAverageRatingByRoomId(Long roomId);
+    @Query("SELECT AVG(r.reviewScore) FROM Review r WHERE r.roomNumber = :roomNumber")
+    Double findAverageRatingByRoomNumber(Integer roomNumber);
 }
