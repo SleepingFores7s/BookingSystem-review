@@ -9,7 +9,8 @@ import com.example.bookingsystemreview.review.dto.UpdateReviewDto;
 import com.example.bookingsystemreview.review.entity.Review;
 import com.example.bookingsystemreview.review.repository.ReviewRepository;
 import com.example.bookingsystemreview.security.sanitation.HtmlSanitizerUtil;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
