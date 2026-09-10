@@ -7,12 +7,13 @@ import jakarta.validation.constraints.Size;
 
 public record NewReviewDto(
         @NotNull
-        Long roomId,
+        Integer roomNumber,
         @NotNull
         @Size(max=200)
         String reviewContent,
         @NotNull
         @Min(1)
         @Max(5)
-        Integer reviewScore) {
+        Integer reviewScore
+) {
 }
