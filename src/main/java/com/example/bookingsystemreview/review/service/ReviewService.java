@@ -91,7 +91,7 @@ public class ReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + dto.reviewId()));
 
         if (!review.getUserId().equals(userId)) {
-            throw new MismatchedUserIdException("User does not own review with id: " + dto.reviewId());
+            throw new AccessDeniedException("You don't have permission to update this review");
         }
 
         String cleanContent = sanitizer.sanitize(dto.reviewContent());
