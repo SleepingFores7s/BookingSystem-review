@@ -58,4 +58,22 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
     }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Map<String, String>> handleDatabaseError(DataAccessException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "An error occurred while accessing the database");
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errors);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(errors);
+    }
 }
