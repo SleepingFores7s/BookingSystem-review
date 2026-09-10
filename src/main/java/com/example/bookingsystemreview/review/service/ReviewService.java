@@ -121,9 +121,7 @@ public class ReviewService {
                 .orElseThrow(() ->  new ResourceNotFoundException("Review not found with id: " + reviewId));
 
         if(!review.getUserId().equals(userId)) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("You don't have permission to delete this review");
+            throw new AccessDeniedException("You don't have permission to delete this review");
         }
 
         reviewRepository.delete(review);
