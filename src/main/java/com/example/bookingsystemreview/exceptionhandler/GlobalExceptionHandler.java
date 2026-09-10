@@ -3,6 +3,7 @@ package com.example.bookingsystemreview.exceptionhandler;
 
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.MissingValueException;
 import com.example.bookingsystemreview.exceptionhandler.customexceptions.ResourceNotFoundException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
