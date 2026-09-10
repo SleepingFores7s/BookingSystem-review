@@ -118,7 +118,7 @@ public class ReviewService {
     public ResponseEntity<?> deleteReviewById(Long userId, Long reviewId) {
 
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() ->  new ResourceNotFoundException("Object not found with id: " + reviewId));
+                .orElseThrow(() ->  new ResourceNotFoundException("Review not found with id: " + reviewId));
 
         if(!review.getUserId().equals(userId)) {
             return ResponseEntity
