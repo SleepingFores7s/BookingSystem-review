@@ -51,7 +51,7 @@ public class ReviewController {
     }
 
     //UPDATE REVIEW
-    @PutMapping("/reviews") //TODO SECURE METHOD
+    @PutMapping("/reviews")
     public ResponseEntity<ReviewResponseDto> updateReviewByReviewId(@AuthenticationPrincipal Long userId, @Valid @RequestBody UpdateReviewDto updateReview) {
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
