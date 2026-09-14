@@ -16,8 +16,19 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: Review-service
+          MYSQL_ROOT_PASSWORD: ${{ secrets.REVIEW_DB_ROOT_PASS }}
+          MYSQL_USER: ${{ secrets.REVIEW_DB_USER }}
+          MYSQL_PASSWORD: ${{ secrets.REVEW_DB_PASS }}
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - name: Checkout repository
@@ -31,6 +42,11 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+      env:
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        SPRING_DATASOURCE_URL: ${{ secrets.REVIEW_DB_CLIENT_URL }} #URL to the created MySQL database schema.
+        SPRING_DATASOURCE_USERNAME: ${{ secrets.REVIEW_DB_USER }} #Username for the database, needs to be the name as the databases chosen user
+        SPRING_DATASOURCE_PASSWORD: ${{ secrets.REVIEW_DB_PASS }}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
