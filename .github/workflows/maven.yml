@@ -17,6 +17,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     services:
       mysql:
@@ -25,7 +27,7 @@ jobs:
           MYSQL_DATABASE: Review-service
           MYSQL_ROOT_PASSWORD: ${{ secrets.REVIEW_DB_ROOT_PASS }}
           MYSQL_USER: ${{ secrets.REVIEW_DB_USER }}
-          MYSQL_PASSWORD: ${{ secrets.REViEW_DB_PASS }}
+          MYSQL_PASSWORD: ${{ secrets.REVIEW_DB_PASS }}
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=3
