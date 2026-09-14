@@ -25,7 +25,7 @@ jobs:
           MYSQL_DATABASE: Review-service
           MYSQL_ROOT_PASSWORD: ${{ secrets.REVIEW_DB_ROOT_PASS }}
           MYSQL_USER: ${{ secrets.REVIEW_DB_USER }}
-          MYSQL_PASSWORD: ${{ secrets.REVEW_DB_PASS }}
+          MYSQL_PASSWORD: ${{ secrets.REViEW_DB_PASS }}
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -44,7 +44,7 @@ jobs:
       run: mvn -B package --file pom.xml
       env:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        SPRING_DATASOURCE_URL: jdbc:mysql://review-db:3306/Review-service #URL to the created MySQL database schema.
+        SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/Review-service #URL to the created MySQL database schema.
         SPRING_DATASOURCE_USERNAME: ${{ secrets.REVIEW_DB_USER }} #Username for the database, needs to be the name as the databases chosen user
         SPRING_DATASOURCE_PASSWORD: ${{ secrets.REVIEW_DB_PASS }}
 
